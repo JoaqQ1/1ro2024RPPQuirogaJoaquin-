@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    
+    <style>
+        body
+        {
+            background-color: #435749;
+            padding: 0px;
+            margin: 0px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            position: relative;
+        }
+        /* ================== ESTILOS FORMULARIO ================== */
+
+        .frmHeader
+        {
+            grid-area: header;
+            text-align: center;
+            font-size: 50px;
+        }
+        .contenedorFormulario
+        {           
+            width: 100%;
+            position: absolute;
+            display: grid;
+            grid-template-areas: 
+            'header header header header header header'
+            'filtro filtro promedio promedio check check'
+            'boton boton boton boton boton boton'
+            'tabla tabla tabla tabla tabla tabla';            
+            
+            gap: 10px;
+            background-color: #d9e2d4;
+            padding: 10px;
+            overflow: hidden;
+            
+        }
+        .contenedorFormulario > div
+        {
+            background-color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 20px 0;
+            font-size: 30px;
+        }
+        .frmFiltro
+        {
+            grid-area: filtro;
+            width: 300px;
+            height: 150px;
+            border: solid 3px;
+        }
+        .frmPromedio
+        {
+            grid-area: promedio;
+            width: 300px;
+            height: 150px;
+            border: solid 3px;
+        }
+        .frmCheckBoxes
+        {
+            grid-area: check;
+
+            height: 250px;
+            width: 500px;
+
+            border: solid 3px;
+            position: relative;
+            overflow: hidden;
+        }
+        .frmTabla
+        {
+            display: grid;
+            border: solid 5px;
+            width: 96%;
+            grid-column: auto;
+            grid-area: tabla;
+        }        
+        .tabla,td,th
+        {            
+            border: 5px solid #bbb;
+            border-radius: 5px;
+            justify-content: center;   
+
+        }
+        #item1
+        {
+            position: absolute;
+            left: 10%;
+        }
+        #item2
+        {
+            position: absolute;
+            left: 70%;
+        }
+
+        #item3
+        {
+            position: absolute;
+            left: 10%;
+            top: 25%;
+        }
+
+        #item4
+        {
+            position: absolute;
+            left: 70%;
+            top: 25%;
+        }
+
+        #item5
+        {
+            position: absolute;
+            left: 10%;
+            top: 40%;
+        }
+
+        #item6
+        {
+            position: absolute;
+            left: 70%;
+            top: 40%;
+        }
+        #item7
+        {
+            position: absolute;
+            left: 10%;
+            top: 60%;
+        }
+
+        #item8
+        {
+            position: absolute;
+            left: 60%;
+            top: 60%;
+        }
+        #frmBtnAgregar
+        {
+            font-size: 50px;
+            width: 96%;         
+            grid-area: boton;   
+        }
+        /* ================== ESTILOS FORMULARIO ================== */
+        
+        /* ================== ESTILOS ABM ================== */
+        
+        .contenedorAbm
+        {
+            visibility: hidden;
+            position: relative;
+            width: 100%;
+
+            display: grid;
+            grid-template-areas: 
+            'header header header header header'
+            'form form form form form'
+            'form form form form form'
+            'form form form form form';
+            
+            gap: 10px;
+            background-color: #d9e2d4;
+            padding: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .tituloAbm
+        {
+            grid-area: header;
+            text-align: center;
+
+        }
+        .contenedorFormAbm
+        {
+            grid-area: form;
+            display: grid;
+            gap: 10px;
+            grid-template-areas: 
+            'id id id'
+            'modelo modelo modelo'
+            'anoFabricacion anoFabricacion anoFabricacion'
+            'velMax velMax velMax'
+            'tipo tipo tipo'
+            'atributo1 atributo1 atributo1'
+            'atributo2 atributo2 atributo2'
+            ;
+           grid-template-rows: auto;
+        }
+        .itemId
+        {
+            grid-area: id;
+        }
+        .itemModelo
+        {
+            grid-area: modelo;
+        }
+        .itemanoFabricacion
+        {
+            grid-area: anoFabricacion;
+        }
+        .itemVelMax
+        {
+            grid-area: velMax
+        }
+        .itemTipo
+        {
+            grid-area: tipo;
+        }
+        .itemAtributo1
+        {
+            grid-area: atributo1;
+        }
+        .itemAtributo2
+        {
+            grid-area: atributo2;
+        }
+        /* ================== ESTILOS ABM ================== */
+    </style>
+
+</head>
+<body>
+    <div class="contenedorFormulario" id="frmPrincipal">
+        <h1 class="frmHeader">Formulario Listado</h1>
+        
+        <div class="frmFiltro">Filtrar por:
+            <select id="frmFiltro">
+                <option value="Todos" >Todos</option>
+                <option value="Auto" >Autos</option>
+                <option value="Camion" >Camiones</option>
+            </select>
+        </div>
+        
+        <div class="frmPromedio">Calcular promedio:
+            <div id="frmPromedio"></div>
+            <button id="frmBtnCalcular">Calcular</button>
+        </div>
+        
+        <div class="frmCheckBoxes">
+            <div id="item1"><input checked type="checkbox" name='id'>ID</div>
+            <div id="item2"><input  checked type="checkbox" name="modelo">Modelo</div>
+            <div id="item3"><input checked type="checkbox" name='anoFabricacion'>Año Fabricacion</div>
+            <div id="item4"><input checked type="checkbox" name='velMax'>Vel Max</div>
+            <div id="item5"><input checked type="checkbox" name='cantidadPuertas'>Cantidad Puertas</div>
+            <div id="item6"><input checked type="checkbox" name='asientos'>Asientos</div>
+            <div id="item7"><input checked type="checkbox" name='carga'>Carga</div>
+            <div id="item8"><input checked type="checkbox" name='autonomia'>Autonomia</div>
+            
+            
+        </div>
+        
+        <button id="frmBtnAgregar">Agregar</button>
+        
+        <div class="frmTabla">
+            <table class="tabla" id="tablaColumns">
+                <thead>
+                    <tr>
+                        <th class="columna" name="id"><button name="id" style="font-size: 100%;">ID</button> </th>
+                        <th class="columna" name="modelo"> <button name="modelo" style="font-size: 100%;">Modelo</button> </th>
+                        <th class="columna" name="anoFabricacion"> <button name="anoFabricacion" style="font-size: 100%;">Año de Fabricacion</button> </th>
+                        <th class="columna" name="velMax"><button name="velMax" style="font-size: 100%;">Velocidad Max</button> </th>
+                        <th class="columna" name="cantidadPuertas"> <button name="cantidadPuertas" style="font-size: 100%;">Cantidad De Puertas</button> </th>
+                        <th class="columna" name="asientos"><button name="asientos" style="font-size: 100%;">Asientos</button></th> 
+                        <th class="columna" name="carga"><button name="carga" style="font-size: 100%;">Carga</button></th>                    
+                        <th class="columna" name="autonomia"><button name="autonomia" style="font-size: 100%;">Autonomia</button></th>                    
+                    </tr>
+                </thead>
+                <tbody id="tablaDeVehiculos"> 
+                </tbody>            
+            </table>
+        </div>     
+        
+    </div>
+    
+    
+    
+    <div class="contenedorAbm" id="frmAbm">
+        <h1 class="tituloAbm">Agregar un Vehiculo</h1>
+        
+        <div class="contenedorFormAbm" id="abmPadre">
+            
+            <!-- Atributos de Vehiculo -->
+            
+            <div class="itemId" id="id">Id:<div class="datos"name="id" ></div>div></div>
+            <div class="itemModelo" id="modelo">Modelo:<input class="datos"name="modelo"></div>
+            <div class="itemanoFabricacion" id="anoFabricacion">Año Fabricacion(mayor a 1985):<input class="datos"name="anoFabricacion"></div>            
+            <div class="itemVelMax" id="velMax">Velocidad Max<input class="datos" name="velMax"></div>
+            
+            <div class="itemTipo">Tipo:
+                <select id="tipo"> 
+                    <option value="--">--</option>
+                    <option value="Auto">Auto</option>
+                    <option value="Camion">Camion</option>
+                </select>
+            </div>
+            
+            <!-- Atributos de Autos o Camiones -->
+            
+            <div class="itemAtributo1" id="atributo1">Atributo:<input name="atributo1" class="datos"></div>
+            <div class="itemAtributo2" id="atributo2">Atributo2:<input name="atributo2" class="datos"></div>
+            
+            
+            <button id="abmBtnAgregar">Agregar</button>
+            <button id="abmBtnEliminar">Eliminar</button>
+            <button id="abmBtnModificar">Modificar</button> 
+            <button id="abmBtnCancelar">Cancelar</button> 
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        
+        // ================= CLASES =================
+        class Vehiculo
+        {
+            id;
+            modelo;
+            anoFabricacion;
+            velMax;
+            
+            constructor(id,modelo,anoFabricacion,velMax)
+            {
+                
+                if((typeof(id) === "number" && id != null) && (typeof(modelo) === "string" && modelo != null) &&
+                (typeof(velMax) === "number" && velMax > 0))
+                {
+                    this.id = id;
+                    this.modelo = modelo;
+                    this.velMax = velMax;
+                }
+                if((typeof(anoFabricacion) === "number" && anoFabricacion > 1985))
+                {
+                    this.anoFabricacion = anoFabricacion;                                             
+                }
+                else
+                {
+                    this.anoFabricacion = "--";                                             
+                }
+            }
+
+            toString(){return "Todos";}
+            
+        }
+
+        class Auto extends Vehiculo
+        {
+            cantidadPuertas;
+            asientos;
+            constructor(id,modelo,anoFabricacion,velMax,cantidadPuertas,asientos)
+            {
+                super(id,modelo,anoFabricacion,velMax);
+
+                if(typeof(cantidadPuertas) === "number" && cantidadPuertas > 2)
+                {
+                    this.cantidadPuertas = cantidadPuertas;
+                }
+                else
+                {
+                    this.cantidadPuertas = "--";
+                }
+                if(typeof(asientos) === "number" && asientos >= 2)
+                {
+                    this.asientos = asientos;
+                }
+                else
+                {
+                    this.asientos = "--";
+                }
+            }
+            toString(){return "Auto";}
+            
+        }
+
+        class Camion extends Vehiculo
+        {
+            carga;
+            autonomia;            
+            constructor(id,modelo,anoFabricacion,velMax,carga,autonomia)
+            {
+                super(id,modelo,anoFabricacion,velMax);
+
+                if((typeof(carga) === "number" && carga > 0))
+                {
+                    this.carga = carga;
+                }  
+                else
+                {
+                    this.carga = "--";                    
+                }
+                if(typeof(autonomia) === "number" && autonomia > 0)   
+                {
+                    this.autonomia = autonomia;
+                }         
+                else
+                {
+                    this.autonomia = "--";
+
+                }
+            }
+
+            toString(){return "Camion";}
+
+            
+        }
+        // ================= CLASES =================
+
+        // ================= FUNCIONES =================
+
+        function $(id){return document.getElementById(id);}
+
+        function ParsearVehiculos(cadenaDeVehiculos)
+        {            
+            let arrayDeVehiculos = [];
+            
+            let datosVehiculos = JSON.parse(cadenaDeVehiculos);            
+            arrayDeVehiculos = datosVehiculos.map((vehiculo)=>
+            {       
+                
+                if(vehiculo.hasOwnProperty('cantidadPuertas'))
+                {
+                    return new Auto(vehiculo.id,vehiculo.modelo,vehiculo.anoFabricacion,vehiculo.velMax,vehiculo.cantidadPuertas,vehiculo.asientos);
+                }
+                else
+                {                    
+                    return new Camion(vehiculo.id,vehiculo.modelo,vehiculo.anoFabricacion,vehiculo.velMax,vehiculo.carga,vehiculo.autonomia);
+                }
+            });                 
+            
+            return arrayDeVehiculos;
+        }
+        
+        function VaciarElemento(elementoAVaciar)
+        {
+            
+            while(elementoAVaciar.hasChildNodes())
+            {
+                elementoAVaciar.removeChild(elementoAVaciar.lastChild);                  
+            } 
+        }
+        
+        function MostrarTablaVehiculos(arrayDeVehiculos)
+        {
+                
+                let tablaPadre = $('tablaDeVehiculos');
+                
+                                    
+                VaciarElemento(tablaPadre);
+                
+                arrayDeVehiculos.forEach(vehiculo => {
+                    
+                    let filaDevehiculoNuevo = document.createElement('tr');
+                    
+        
+                    
+                    filaDevehiculoNuevo.innerHTML = `
+                    <td class="columna" name='id'>${vehiculo.id}</td>
+                    <td class="columna" name='modelo'>${vehiculo.modelo}</td>
+                    <td class="columna" name='anoFabricacion'>${vehiculo.anoFabricacion}</td>
+                    <td class="columna" name='velMax'>${vehiculo.velMax}</td>
+                    <td class="columna" name='cantidadPuertas'>${vehiculo.cantidadPuertas || "--"}</td>
+                    <td class="columna" name='asientos'>${vehiculo.asientos || "--"}</td> 
+                    <td class="columna" name='carga'>${vehiculo.carga || "--"}</td> 
+                    <td class="columna" name='carga'>${vehiculo.autonomia || "--"}</td>
+
+
+                    `;
+                    
+                    tablaPadre.appendChild(filaDevehiculoNuevo); 
+                });  
+
+                AgregarFuncionalidades();
+        }
+        function FiltrarVehiculosDeLaTabla()
+        {                                
+            let filtro = $("frmFiltro");
+
+            let vehiculosFiltradas = arrayDeVehiculos.filter((vehiculo)=>
+            {
+                if(filtro.value != "Todos")
+                {
+                    return vehiculo.toString() == filtro.value;
+                }
+                else
+                {
+                    return arrayDeVehiculos;
+                }
+            });                
+            
+            MostrarTablaVehiculos(vehiculosFiltradas);
+        }
+
+        function CalcularPromedio()
+        {
+            let tablaVehiculos = $('tablaDeVehiculos').querySelectorAll('.columna');
+            let parrafoPromedio = $('frmPromedio');
+            
+            let velocidades = [];
+            let acumuladorVelocidades = 0;
+            let contador = 0;
+            let promedio;
+            
+            tablaVehiculos.forEach(element=>
+            {
+                if(element.getAttribute('name') == 'velMax')
+                {
+                    velocidades.push(parseInt(element.textContent));                
+                }
+            });
+            
+            velocidades.forEach(velocidad=>
+            {                                         
+                acumuladorVelocidades += velocidad;
+                contador++;
+            });
+            
+            promedio = acumuladorVelocidades/contador;
+            
+            parrafoPromedio.textContent = '';
+            parrafoPromedio.textContent = promedio.toFixed(2);             
+        }
+
+        function FiltrarColumnas()
+        {            
+            let tablaVehiculos = $('tablaDeVehiculos').querySelectorAll('.columna');
+            let checkBoxs = document.querySelectorAll('input[type="checkbox"]');
+
+            let atributosChecked = [];
+            
+            checkBoxs.forEach(atributo=>
+            {
+                if(atributo.checked)
+                {
+                    atributosChecked.push(atributo.getAttribute('name'));
+                }                    
+
+            });
+                        
+            tablaVehiculos.forEach(atributoVehiculo=>
+            {
+                if(!atributosChecked.includes(atributoVehiculo.getAttribute('name')))
+                {
+                    OcultarElemento(atributoVehiculo);
+                }
+                else
+                {
+                    MostrarElemento(atributoVehiculo);                          
+                }
+            });        
+        }
+
+        function OcultarElemento(elemento)
+        {
+            elemento.style.visibility = 'hidden';
+        }
+        function MostrarElemento(elemento)
+        {            
+            elemento.style.visibility = 'visible';            
+        }
+
+        function MostrarAbm()
+        {                        
+            let formularioPrincipal = $("frmPrincipal"); 
+            let formularioAbm = $('frmAbm');
+            
+            let id = $("id");
+            let atributo1 = $("atributo1");
+            let atributo2 = $("atributo2");
+
+            let btnModificar = $("abmBtnModificar");
+            let btnEliminar = $("abmBtnEliminar");
+            
+            OcultarElemento(formularioPrincipal);
+            OcultarElemento(id);
+            OcultarElemento(atributo1);
+            OcultarElemento(atributo2);
+            OcultarElemento(btnModificar);
+            OcultarElemento(btnEliminar);
+            
+            MostrarElemento(formularioAbm);
+        }
+
+        function MostrarAtributos()
+        {             
+            let padre = $("abmPadre"); 
+            let tipo = $('tipo');
+            
+            let atributo1Anterior = $("atributo1");
+            let atributo2Anterior = $("atributo2");
+
+            padre.removeChild(atributo1Anterior);
+            padre.removeChild(atributo2Anterior);
+                        
+            let atributo1 = document.createElement("div");
+            let inputAtributo1 = document.createElement("input");
+
+            let atributo2 = document.createElement("div");
+            let inputAtributo2 = document.createElement("input");            
+            
+            atributo1.setAttribute("class","itemAtributo1");
+            atributo1.setAttribute("id","atributo1");
+
+            inputAtributo1.setAttribute("type","text");
+            inputAtributo1.setAttribute("name","cantidadPuertas");
+            inputAtributo1.setAttribute("class","datos");
+
+            atributo2.setAttribute("class","itemAtributo2");
+            atributo2.setAttribute("id","atributo2");
+
+            inputAtributo2.setAttribute("type","text");
+            inputAtributo2.setAttribute("name","asientos");
+            inputAtributo2.setAttribute("class","datos");
+                
+            
+            if(tipo.value == "--")
+            {                                
+                atributo.innerHTML = "";
+                                                        
+            }
+            else if(tipo.value == "Auto")
+            {                      
+                atributo1.appendChild(document.createTextNode("Cantidad de Puertas:"));
+                atributo1.appendChild(inputAtributo1);
+
+                atributo2.appendChild(document.createTextNode("Asientos:"));
+                atributo2.appendChild(inputAtributo2);
+                                                    
+            }
+            else
+            {                        
+                inputAtributo1.setAttribute("name","carga");
+                atributo1.appendChild(document.createTextNode("Carga:"));
+                atributo1.appendChild(inputAtributo1);
+                
+                inputAtributo2.setAttribute("name","autonomia");
+                atributo2.appendChild(document.createTextNode("Autonomia:"));
+                atributo2.appendChild(inputAtributo2);
+            }
+            
+            padre.appendChild(atributo1);  
+            padre.appendChild(atributo2);                                                   
+
+        }
+        function RetornarUltimoId(vehiculos)
+        {
+            let ids = vehiculos.map((element)=>{return element.id});
+
+            let ultimoId = ids.reduce(function (a, b) 
+            {
+                return Math.max(a, b);
+            }, -Infinity);
+
+            return ultimoId
+        }
+
+        function ResetearAbm()
+        {
+            let datos = $("abmPadre").querySelectorAll(".datos");
+            datos.forEach((element)=>
+            {
+                element.value = "";
+            });
+        }
+        
+        function AgregarVehiculo()
+        {            
+            let formularioPrincipal = $("frmPrincipal"); 
+            let formularioAbm = $('frmAbm'); 
+            
+            let anoFabricacion = $("anoFabricacion").lastChild.value;
+            let modelo = $("modelo").lastChild.value;
+            let velMax = $("velMax").lastChild.value;
+            let atributo1 = $("atributo1").lastChild.value;
+            let atributo2 = $("atributo2").lastChild.value;
+           
+            
+            
+            if(modelo.length > 0 && anoFabricacion.length > 0 && velMax.length > 0 && atributo1.length > 0 && atributo2.length > 0)
+            {                        
+                let ultimoId = RetornarUltimoId(arrayDeVehiculos) + 1;
+                anoFabricacion = parseInt(anoFabricacion);
+                velMax = parseInt(velMax);
+
+                if($("atributo1").lastChild.getAttribute("name") == "cantidadPuertas")
+                {                    
+                    let cantidadPuertas = parseInt(atributo1);
+                    let asientos = parseInt(atributo2);
+
+                    if(cantidadPuertas > 2 && asientos > 2 && anoFabricacion > 1985 && velMax > 0)
+                    {
+                        window.alert("Se agrego al Vehiculo correctamente");
+                        let nuevoVehiculo = new Auto(ultimoId,modelo,anoFabricacion,velMax,cantidadPuertas,asientos);                                    
+                        arrayDeVehiculos.push(nuevoVehiculo);
+
+                        ResetearAbm();
+                        OcultarElemento(formularioAbm);
+                        OcultarElemento($("atributo1"));
+                        OcultarElemento($("atributo2"));
+                        MostrarElemento(formularioPrincipal);
+                        MostrarTablaVehiculos(arrayDeVehiculos);
+                    }
+                    else
+                    {
+                        window.alert("Se ingresaron mal los datos del auto!!");
+                    }
+                }
+                else
+                {
+                    let carga = parseInt(atributo1);
+                    let autonomia = parseInt(atributo2);
+                    if(carga > 0 && autonomia > 0 && anoFabricacion > 1985 && velMax > 0)
+                    {
+                        nuevoVehiculo = new Camion(ultimoId,modelo,anoFabricacion,velMax,carga,autonomia);
+                        arrayDeVehiculos.push(nuevoVehiculo);
+
+                        ResetearAbm();
+                        OcultarElemento(formularioAbm);
+                        OcultarElemento($("atributo1"));
+                        OcultarElemento($("atributo2"));
+                        MostrarElemento(formularioPrincipal);
+                        MostrarTablaVehiculos(arrayDeVehiculos);
+                    }
+                    else
+                    {
+                        window.alert("Se ingresaron mal los datos del camion!!");
+                    }
+                }
+
+            }
+            else
+            {
+                window.alert("Se ingresaron mal los datos!!");
+            }                  
+        }
+
+        function OrdenarVehiculos(atributo)
+        {            
+            let VehiculosOrdenadas = arrayDeVehiculos.sort(OrdenarPor(atributo));            
+            MostrarTablaVehiculos(VehiculosOrdenadas);
+        }
+
+        function OrdenarPor(atributo)
+        {
+            
+            return function(a, b) 
+            {
+                
+                if (typeof a[atributo] === 'string')
+                {
+                    let modeloA = a[atributo];
+                    let modeloB = b[atributo];
+
+                    return modeloA.localeCompare(modeloB);
+                }
+                else
+                {
+                    return a[atributo] - b[atributo];
+                }
+            };
+        }
+
+        function MostrarAbmConVehiculo(vehiculo)
+        {            
+            let datosVehiculo = RecolectarDatos(vehiculo);
+
+            let formularioPrincipal = $("frmPrincipal"); 
+            let formularioAbm = $('frmAbm');            
+            let btnAgregar = $("abmBtnAgregar");
+
+            ColocarDatos(datosVehiculo);
+            OcultarElemento(formularioPrincipal);            
+            OcultarElemento(btnAgregar);            
+            MostrarElemento(formularioAbm);
+        }
+
+        function ColocarDatos(datos)
+        {
+            let tipo = $("tipo");
+            let id = $("id").lastChild;
+            let modelo = $("modelo").lastChild;
+            let anoFabricacion = $("anoFabricacion").lastChild;
+            let velMax = $("velMax").lastChild;                   
+            
+            id.textContent = datos["id"];
+            modelo.setAttribute('value',datos["modelo"]);  
+            anoFabricacion.setAttribute('value',datos["anoFabricacion"]);
+            velMax.setAttribute('value',datos["velMax"]);
+
+            
+            if(datos["cantidadPuertas"] != undefined || datos["asientos"] != undefined)
+            {
+                tipo.value = "Auto";
+                MostrarAtributos();
+
+                let atributo1 = $("atributo1").lastChild;
+                let atributo2 = $("atributo2").lastChild;
+
+                atributo1.setAttribute('value',datos["cantidadPuertas"]);
+                atributo2.setAttribute('value',datos["asientos"]);
+
+            }
+            else
+            {
+                tipo.value = "Camion";
+                MostrarAtributos();
+
+                let atributo1 = $("atributo1").lastChild;                
+                let atributo2 = $("atributo2").lastChild;                
+                atributo.setAttribute('value',datos["carga"]);
+                atributo.setAttribute('value',datos["autonomia"]);
+            }
+                
+        }
+
+        function RecolectarDatos(htmlCollection)
+        {
+            let datosRecolectados = {};
+            
+            for (let index = 0; index < htmlCollection.length; index++) 
+            {
+                let clave = htmlCollection[index].getAttribute('name');                
+                let valor = htmlCollection[index].textContent;
+
+                if(valor != "--" && !datosRecolectados[clave])
+                {
+                    datosRecolectados[clave] = valor                    
+                }                
+            }
+            return datosRecolectados
+        }
+
+        function EliminarVehiculo()
+        {            
+            let id = parseInt($("id").lastChild.textContent);
+
+            delete arrayDeVehiculos[id];
+            let nuevoArray = arrayDeVehiculos.filter((element)=>
+            {
+                return element != undefined;
+            });
+            ResetearAbm();
+            OcultarElemento($('frmAbm'));
+            OcultarElemento($("atributo1"));
+            OcultarElemento($("atributo2"));
+            MostrarElemento($("frmPrincipal"));
+            MostrarTablaVehiculos(nuevoArray);
+        }
+
+        function ModificarVehiculo()
+        {            
+            let id = parseInt($("id").lastChild.textContent);
+
+            let modelo = $("modelo").lastChild.value;
+            let velMax = $("velMax").lastChild.value;
+            let anoFabricacion = $("anoFabricacion").lastChild.value;
+            let atributo1 = $("atributo1").lastChild.value;
+            let atributo2 = $("atributo2").lastChild.value;
+            if(modelo.length > 0 && anoFabricacion.length > 0 && velMax.length > 0 && atributo1.length > 0 && atributo2.length > 0)
+            {
+                anoFabricacion = parseInt(anoFabricacion);
+                velMax = parseInt(velMax);
+                if($("atributo1").lastChild.getAttribute("name") == "cantidadPuertas")
+                {
+                    let cantidadPuertas = parseInt(atributo1);
+                    let asientos = parseInt(atributo2);
+                    if(cantidadPuertas > 2 && asientos > 2 && anoFabricacion > 1985 && velMax > 0)
+                    {
+                        window.alert("Se modifico el Vehiculo correctamente");
+                        arrayDeVehiculos[id]["modelo"] = modelo;
+                        arrayDeVehiculos[id]["velMax"] = velMax;
+                        arrayDeVehiculos[id]["anoFabricacion"] = anoFabricacion;
+                        arrayDeVehiculos[id]["cantidadPuertas"] = cantidadPuertas
+                        arrayDeVehiculos[id]["asientos"] = asientos;
+                        ResetearAbm();
+                        OcultarElemento($('frmAbm'));
+                        OcultarElemento($("atributo1"));
+                        OcultarElemento($("atributo2"));
+                        MostrarElemento($("frmPrincipal"));
+                        MostrarTablaVehiculos(arrayDeVehiculos);
+                    }
+                    else
+                    {
+                        window.alert("Se ingresaron mal los datos del auto!!");
+                    }
+                }
+                else
+                {
+                    let carga = parseInt(atributo1);
+                    let autonomia = parseInt(atributo2);
+                    if(carga > 0 && autonomia > 0 && anoFabricacion > 1985 && velMax > 0)
+                    {
+                        window.alert("Se modifico el Vehiculo correctamente");
+                        arrayDeVehiculos[id]["modelo"] = modelo;
+                        arrayDeVehiculos[id]["velMax"] = velMax;
+                        arrayDeVehiculos[id]["anoFabricacion"] = anoFabricacion;
+                        arrayDeVehiculos[id]["carga"] = carga;
+                        arrayDeVehiculos[id]["autonomia"] = autonomia;
+                        ResetearAbm();
+                        OcultarElemento($('frmAbm'));
+                        OcultarElemento($("atributo1"));
+                        OcultarElemento($("atributo2"));
+                        MostrarElemento($("frmPrincipal"));
+                        MostrarTablaVehiculos(arrayDeVehiculos);
+                    }   
+                    else
+                    {
+                        window.alert("Se ingresaron mal los datos del camion!!");
+                    }
+
+                }            
+            
+            }
+            else
+            {
+                window.alert("Se ingresaron mal los datos!!");                
+            }
+        }
+        function AgregarFuncionalidades()
+        {
+            const filtro = $("frmFiltro");
+            const checkBoxs = document.querySelectorAll('input[type="checkbox"]');
+            const btnCalcular = $("frmBtnCalcular");
+            const btnAgregar = $("frmBtnAgregar");
+            const btnCancelar = $("abmBtnCancelar");
+            const btnAgregarNuevaVehiculo = $("abmBtnAgregar");
+            const btnEliminar = $("abmBtnEliminar");
+            const btnModificar = $("abmBtnModificar");
+
+            
+            const abmTipo = $("tipo");
+            const columnas = $("tablaColumns").querySelectorAll("button");
+            const Vehiculos = $("tablaDeVehiculos").querySelectorAll("tr");
+
+            Vehiculos.forEach((element)=>
+            {
+                element.addEventListener("dblclick",()=>
+                {
+                    MostrarAbmConVehiculo(element.children);
+                });                                    
+            })
+            
+            
+            btnCancelar.addEventListener('click',()=>
+            {
+                ResetearAbm();
+                $("frmAbm").style.visibility = "hidden";
+                $("frmPrincipal").style.visibility = "visible";
+            })
+
+            btnModificar.addEventListener("click",ModificarVehiculo);
+            btnEliminar.addEventListener('click',EliminarVehiculo)
+            btnCalcular.addEventListener('click',CalcularPromedio);
+            btnAgregar.addEventListener('click',MostrarAbm);
+            btnAgregarNuevaVehiculo.addEventListener('click',AgregarVehiculo);
+            
+            abmTipo.addEventListener('change',MostrarAtributos);
+            filtro.addEventListener('change',FiltrarVehiculosDeLaTabla);
+
+            checkBoxs.forEach((element) =>
+            {
+                element.addEventListener('change',FiltrarColumnas);
+            });
+
+            columnas.forEach((element)=>
+            {
+                let atributo = element.getAttribute('name');
+                element.addEventListener('click',()=>{OrdenarVehiculos(atributo)});
+            });        
+        }
+        
+        // ================= FUNCIONES =================
+        
+        // ================= MAIN =================        
+        
+        
+        const cadenaDeVehiculos = '[{"id":1,"modelo":"Fiat100","anoFabricacion":1987,"velMax":60,"cantidadPuertas":4,"asientos":4},{"id":2,"modelo":"FordMustang","anoFabricacion":1960,"velMax":100,"cantidadPuertas":2,"asientos":2},{"id":3,"modelo":"FerraryF100","anoFabricacion":1999,"velMax":200,"cantidadPuertas":2,"asientos":2},{"id":4,"modelo":"Escania","anoFabricacion":1987,"velMax":60,"carga":5550,"autonomia":300},{"id":5,"modelo":"DodgeRam","anoFabricacion":1970,"velMax":100,"carga":2333,"autonomia":400},{"id":666,"modelo":"ChevySilverado","anoFabricacion":1994,"velMax":80,"carga":1000,"autonomia":450}]';
+        const arrayDeVehiculos = ParsearVehiculos(cadenaDeVehiculos);
+        
+        MostrarTablaVehiculos(arrayDeVehiculos);
+        AgregarFuncionalidades();
+                             
+        // ================= MAIN =================
+        
+    </script>
+    </body>
+    </html>
