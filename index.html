@@ -351,7 +351,7 @@
             {
                 super(id,modelo,anoFabricacion,velMax);
 
-                if(typeof(cantidadPuertas) === "number" && cantidadPuertas > 2)
+                if(typeof(cantidadPuertas) === "number" && cantidadPuertas >= 2)
                 {
                     this.cantidadPuertas = cantidadPuertas;
                 }
@@ -686,7 +686,7 @@
                     let cantidadPuertas = parseInt(atributo1);
                     let asientos = parseInt(atributo2);
 
-                    if(cantidadPuertas > 2 && asientos > 2 && anoFabricacion > 1985 && velMax > 0)
+                    if(cantidadPuertas >= 2 && asientos >= 2 && anoFabricacion > 1985 && velMax > 0)
                     {
                         window.alert("Se agrego al Vehiculo correctamente");
                         let nuevoVehiculo = new Auto(ultimoId,modelo,anoFabricacion,velMax,cantidadPuertas,asientos);                                    
@@ -863,7 +863,7 @@
                 {
                     let cantidadPuertas = parseInt(atributo1);
                     let asientos = parseInt(atributo2);
-                    if(cantidadPuertas > 2 && asientos > 2 && anoFabricacion > 1985 && velMax > 0)
+                    if(cantidadPuertas >= 2 && asientos >= 2 && anoFabricacion > 1985 && velMax > 0)
                     {
                         window.alert("Se modifico el Vehiculo correctamente");
                         arrayDeVehiculos[id]["modelo"] = modelo;
